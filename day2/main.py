@@ -4,28 +4,33 @@ from pathlib import Path
 def part1(lines: list) -> int:
     total_res = 0
     for line in lines:
-        inc = 0
-        calc = 0
         temp = list(map(int, line.split(" ")))
 
-        for i, num in enumerate(temp[:-1]):
-            if num > temp[i + 1]:
-                inc -= 1
-            else:
-                inc += 1
-
-        if abs(inc) == len(temp) - 1:
-            for i in range(len(temp) - 1):
-                if 1 <= abs(temp[i] - temp[i + 1]) <= 3:
-                    calc += 1
-            if calc == (len(temp) - 1):
-                total_res += 1
+        check = all(1 <= temp[i + 1] - temp[i] <= 3 for i in range(len(temp) - 1)) or (
+            all(1 <= temp[i] - temp[i + 1] <= 3 for i in range(len(temp) - 1))
+        )
+        if check:
+            total_res += 1
 
     return total_res
 
 
 def part2(lines: list) -> int:
-    pass
+    total_res = 0
+    for line in lines:
+        temp = list(map(int, line.split(" ")))
+
+        sub_sequences = [temp[:i] + temp[i + 1 :] for i in range(len(temp))]
+
+        for sub in sub_sequences:
+            check = all(
+                1 <= sub[i + 1] - sub[i] <= 3 for i in range(len(sub) - 1)
+            ) or all(1 <= sub[i] - sub[i + 1] <= 3 for i in range(len(sub) - 1))
+            if check:
+                total_res += 1
+                break
+
+    return total_res
 
 
 if __name__ == "__main__":
@@ -33,4 +38,5 @@ if __name__ == "__main__":
 
     p1_answer = part1(lines)
     print(p1_answer)
-    # p2 = part2(lines)
+    p2 = part2(lines)
+    print(p2)
